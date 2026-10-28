@@ -2,19 +2,38 @@
 
 ## Executar
 
-- Jogo original: \`./gradlew run\`
-- Mapa de demonstração: \`./gradlew run --args='/board-feature1.txt'\`
-- Testes: \`./gradlew test\`
+- Jogo original: `./gradlew run`
+- Mapa baseado no labirinto original, com os dois circuitos: `./gradlew run --args='/board-feature1.txt'`
+- Mapa extra para testar fechamento pendente: `./gradlew run --args='/board-circuit-test.txt'`
+- Testes automatizados: `./gradlew test`
 
-O mapa original (\`src/main/resources/board.txt\`) foi mantido. O mapa de demonstração fica em
-\`src/main/resources/board-feature1.txt\`.
+O mapa original (`src/main/resources/board.txt`) foi mantido sem alterações. O mapa
+`board-feature1.txt` preserva o formato de 23 × 21 casas, as paredes, os corredores, os pellets,
+os fantasmas e a posição inicial do jogador do mapa original; acrescenta dois portões no corredor
+superior e os interruptores perto do início.
+
+O mapa `board-circuit-test.txt` é menor (17 × 9) para facilitar testes manuais. Ele tem dois
+interruptores para cada circuito, dois portões para cada circuito e quatro fantasmas.
 
 ## Legenda
 
-- \`1\` e \`2\`: interruptores dos circuitos 1 e 2; o jogador alterna o comando do circuito ao entrar.
-- \`a\` e \`b\`: portões dos circuitos 1 e 2.
-- Portão com chão: aberto; portão com parede: fechado; \`~\`: fechamento pendente.
+- `1` e `2`: interruptores fixos dos circuitos 1 e 2. O jogador alterna o comando ao entrar.
+- `a` e `b`: portões dos circuitos 1 e 2.
+- Portão com chão: aberto; portão com parede: fechado; `~`: fechamento pendente.
 - Fantasmas atravessam interruptores sem acioná-los.
+
+## Como testar o fechamento pendente
+
+1. Execute `./gradlew run --args='/board-circuit-test.txt'`.
+2. Entre em um interruptor `1` ou `2` para abrir o circuito correspondente.
+3. Observe os fantasmas e espere um deles ocupar um portão `a` ou `b` daquele circuito.
+4. Entre em outro interruptor com o mesmo número para comandar o fechamento.
+5. Se ainda houver um ocupante no portão, ele deve mostrar `~`: não admite novas entradas,
+   mas permite que o ocupante saia. Quando o último ocupante sair, o portão fecha. Acionar de novo
+   o interruptor para abrir cancela o fechamento pendente.
+
+O movimento dos fantasmas é dinâmico; pode ser necessário esperar ou repetir a tentativa para
+conseguir que um fantasma ocupe um portão no momento do fechamento.
 
 ## Regras implementadas
 
