@@ -142,6 +142,12 @@ class MapParserFeatureOneTest {
             level.move(player, Direction.EAST);
             assertThat(gate.getState()).isEqualTo(GateSquare.State.PENDING_CLOSURE);
             assertThat(gate.getOccupants()).contains(ghost);
+            assertThat(gate.isAccessibleTo(ghost)).isTrue();
+            assertThat(gate.isAccessibleTo(player)).isFalse();
+
+            level.move(player, Direction.EAST);
+            assertThat(player.getSquare()).isSameAs(board.squareAt(2, 1));
+            assertThat(gate.getOccupants()).contains(ghost);
 
             level.move(ghost, Direction.EAST);
             assertThat(ghost.getSquare()).isSameAs(board.squareAt(4, 1));
