@@ -64,11 +64,19 @@ public final class Circuit {
         }
     }
 
+    /**
+     * Registers a gate with this circuit and applies its current command.
+     *
+     * @param gate Gate to register.
+     */
     void registerGate(GateSquare gate) {
         gates.add(gate);
         gate.applyCommand(open);
     }
 
+    /**
+     * Records another fixed switch belonging to this circuit.
+     */
     void registerSwitch() {
         switchCount++;
     }

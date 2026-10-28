@@ -43,6 +43,16 @@ class BoardPanel extends JPanel {
      */
     private static final int LEGEND_HEIGHT = 30;
 
+    private static final int LEGEND_TEXT_SIZE = 9;
+    private static final int LEGEND_MARGIN = 4;
+    private static final int LEGEND_FIRST_BASELINE = 11;
+    private static final int LEGEND_SECOND_BASELINE = 23;
+    private static final int GATE_LABEL_FONT_SIZE = 10;
+    private static final int LABEL_RIGHT_OFFSET = 7;
+    private static final int LABEL_BOTTOM_OFFSET = 3;
+    private static final int PENDING_MARK_X_OFFSET = 2;
+    private static final int PENDING_MARK_BASELINE = 10;
+
     /**
      * The game to display.
      */
@@ -113,9 +123,11 @@ class BoardPanel extends JPanel {
     private void renderLegend(Graphics graphics, int y) {
         Font original = graphics.getFont();
         graphics.setColor(Color.WHITE);
-        graphics.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 9));
-        graphics.drawString("Key + number: circuit 1 or 2", 4, y + 11);
-        graphics.drawString("Gate: floor=open, wall=closed, ~=pending closure", 4, y + 23);
+        graphics.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, LEGEND_TEXT_SIZE));
+        graphics.drawString("Key + number: circuit 1 or 2",
+            LEGEND_MARGIN, y + LEGEND_FIRST_BASELINE);
+        graphics.drawString("Gate: floor=open, wall=closed, ~=pending closure",
+            LEGEND_MARGIN, y + LEGEND_SECOND_BASELINE);
         graphics.setFont(original);
     }
 
@@ -153,7 +165,8 @@ class BoardPanel extends JPanel {
             drawCircuitNumber(graphics, gate.getCircuitId(), x, y, width, height);
             if (gate.isPendingClosure()) {
                 graphics.setColor(Color.WHITE);
-                graphics.drawString("~", x + 2, y + Math.min(height - 2, 10));
+                graphics.drawString("~", x + PENDING_MARK_X_OFFSET,
+                    y + Math.min(height - 2, PENDING_MARK_BASELINE));
             }
         } else if (square instanceof SwitchSquare) {
             SwitchSquare switchSquare = (SwitchSquare) square;
@@ -174,9 +187,10 @@ class BoardPanel extends JPanel {
     private void drawCircuitNumber(Graphics graphics, int circuitId, int x, int y,
                                    int width, int height) {
         Font original = graphics.getFont();
-        graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
+        graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, GATE_LABEL_FONT_SIZE));
         graphics.setColor(Color.WHITE);
-        graphics.drawString(Integer.toString(circuitId), x + width - 7, y + height - 3);
+        graphics.drawString(Integer.toString(circuitId), x + width - LABEL_RIGHT_OFFSET,
+            y + height - LABEL_BOTTOM_OFFSET);
         graphics.setFont(original);
     }
 }

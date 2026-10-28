@@ -86,6 +86,11 @@ public final class GateSquare extends Square {
         return open ? openSprite : closedSprite;
     }
 
+    /**
+     * Applies a circuit command while preserving occupied-gate semantics.
+     *
+     * @param shouldOpen True to open the gate or cancel a pending closure.
+     */
     void applyCommand(boolean shouldOpen) {
         if (shouldOpen) {
             open = true;
