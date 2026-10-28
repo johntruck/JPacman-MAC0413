@@ -83,7 +83,10 @@ public final class GateSquare extends Square {
 
     @Override
     public Sprite getSprite() {
-        return open ? openSprite : closedSprite;
+        if (open) {
+            return openSprite;
+        }
+        return closedSprite;
     }
 
     /**

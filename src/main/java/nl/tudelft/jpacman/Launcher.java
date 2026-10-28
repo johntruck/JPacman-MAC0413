@@ -212,7 +212,11 @@ public class Launcher {
         Launcher launcher = new Launcher();
         if (args.length > 0) {
             String mapName = args[0];
-            launcher.withMapFile(mapName.startsWith("/") ? mapName : "/" + mapName);
+            if (mapName.startsWith("/")) {
+                launcher.withMapFile(mapName);
+            } else {
+                launcher.withMapFile("/" + mapName);
+            }
         }
         launcher.launch();
     }

@@ -178,7 +178,12 @@ public class MapParser {
         for (Circuit circuit : circuits.values()) {
             if ((circuit.hasGate() || circuit.hasSwitch())
                 && (!circuit.hasGate() || !circuit.hasSwitch())) {
-                char gateSymbol = circuit.getId() == 1 ? 'a' : 'b';
+                char gateSymbol;
+                if (circuit.getId() == 1) {
+                    gateSymbol = 'a';
+                } else {
+                    gateSymbol = 'b';
+                }
                 throw new PacmanConfigurationException(
                     "Circuit " + circuit.getId()
                         + " is incomplete: it needs at least one switch ('"
