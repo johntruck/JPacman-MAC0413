@@ -20,7 +20,7 @@ vertical separa o jogador dos fantasmas; os portões são as únicas passagens e
 
 - `1` e `2`: interruptores fixos dos circuitos 1 e 2. O jogador alterna o comando ao entrar.
 - `a` e `b`: portões dos circuitos 1 e 2.
-- Portão com chão: aberto; portão com parede: fechado; `~`: fechamento pendente.
+- Portão com chão sem marca: aberto; portão com parede: fechado; portão com chão e `~`: fechamento pendente.
 - Fantasmas atravessam interruptores sem acioná-los.
 
 ## Como testar o fechamento pendente
