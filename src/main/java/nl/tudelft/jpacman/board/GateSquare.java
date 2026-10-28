@@ -27,7 +27,7 @@ public final class GateSquare extends Square {
      * Creates a gate that starts closed.
      *
      * @param circuit The circuit controlling this gate.
-     * @param openSprite Sprite used while the gate is open.
+     * @param openSprite Sprite used while the gate is open or pending closure.
      * @param closedSprite Sprite used while the gate is closed.
      */
     public GateSquare(Circuit circuit, Sprite openSprite, Sprite closedSprite) {
@@ -83,7 +83,7 @@ public final class GateSquare extends Square {
 
     @Override
     public Sprite getSprite() {
-        if (open) {
+        if (open || pendingClosure) {
             return openSprite;
         }
         return closedSprite;
