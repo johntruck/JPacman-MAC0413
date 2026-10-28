@@ -126,7 +126,7 @@ class BoardPanel extends JPanel {
         graphics.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, LEGEND_TEXT_SIZE));
         graphics.drawString("Key + number: circuit 1 or 2",
             LEGEND_MARGIN, y + LEGEND_FIRST_BASELINE);
-        graphics.drawString("Gate: floor=open, wall=closed, ~=pending closure",
+        graphics.drawString("Gate: floor=open, wall=closed, floor + ~=pending",
             LEGEND_MARGIN, y + LEGEND_SECOND_BASELINE);
         graphics.setFont(original);
     }
