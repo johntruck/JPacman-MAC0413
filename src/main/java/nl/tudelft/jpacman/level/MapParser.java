@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import nl.tudelft.jpacman.PacmanConfigurationException;
-import nl.tudelft.jpacman.board.Circuit;
 import nl.tudelft.jpacman.board.Board;
 import nl.tudelft.jpacman.board.BoardFactory;
+import nl.tudelft.jpacman.board.Circuit;
 import nl.tudelft.jpacman.board.Square;
 import nl.tudelft.jpacman.npc.Ghost;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -62,6 +62,8 @@ public class MapParser {
      * <li>'.' (period) a square with a pellet.
      * <li>'P' (capital P) a starting square for players.
      * <li>'G' (capital G) a square with a ghost.
+     * <li>'1' and '2' switches for circuits 1 and 2.
+     * <li>'a' and 'b' gates for circuits 1 and 2.
      * </ul>
      *
      * @param map

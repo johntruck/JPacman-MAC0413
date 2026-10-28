@@ -20,18 +20,25 @@ class CircuitTest {
         Circuit first = new Circuit(1);
         Circuit second = new Circuit(2);
         GateSquare gateOne = new GateSquare(first, floor, wall);
+        GateSquare anotherGateOne = new GateSquare(first, floor, wall);
         GateSquare gateTwo = new GateSquare(second, floor, wall);
+        new SwitchSquare(first, floor, wall);
+        new SwitchSquare(first, floor, wall);
         TestUnit unit = new TestUnit();
 
         assertThat(gateOne.getState()).isEqualTo(GateSquare.State.CLOSED);
+        assertThat(anotherGateOne.getState()).isEqualTo(GateSquare.State.CLOSED);
         assertThat(gateTwo.getState()).isEqualTo(GateSquare.State.CLOSED);
         assertThat(gateOne.isAccessibleTo(unit)).isFalse();
+        assertThat(anotherGateOne.isAccessibleTo(unit)).isFalse();
         assertThat(gateTwo.isAccessibleTo(unit)).isFalse();
 
         first.toggle();
 
         assertThat(gateOne.getState()).isEqualTo(GateSquare.State.OPEN);
+        assertThat(anotherGateOne.getState()).isEqualTo(GateSquare.State.OPEN);
         assertThat(gateOne.isAccessibleTo(unit)).isTrue();
+        assertThat(anotherGateOne.isAccessibleTo(unit)).isTrue();
         assertThat(gateTwo.getState()).isEqualTo(GateSquare.State.CLOSED);
         assertThat(gateTwo.isAccessibleTo(unit)).isFalse();
     }
