@@ -114,6 +114,49 @@ class MapParserFeatureOneTest {
     }
 
     @Test
+    void ghostCanLeavePendingGateButCannotEnterItAgain() {
+        PacManSprites sprites = new PacManSprites();
+        Level parsed = createParser(sprites).parseMap(Arrays.asList(
+            "########",
+            "#P1aG  #",
+            "#      #",
+            "########"));
+        Board board = parsed.getBoard();
+        Ghost ghost = Navigation.findUnitInBoard(Ghost.class, board);
+        Player player = new PlayerFactory(sprites).createPacMan();
+        GateSquare gate = (GateSquare) board.squareAt(3, 1);
+
+        Level level = new Level(board, Collections.<Ghost>emptyList(),
+            Collections.singletonList(board.squareAt(1, 1)),
+            new PlayerCollisions(new DefaultPointCalculator()));
+        level.registerPlayer(player);
+        level.start();
+        try {
+            level.move(player, Direction.EAST);
+            assertThat(gate.getState()).isEqualTo(GateSquare.State.OPEN);
+
+            level.move(ghost, Direction.WEST);
+            assertThat(ghost.getSquare()).isSameAs(gate);
+
+            level.move(player, Direction.WEST);
+            level.move(player, Direction.EAST);
+            assertThat(gate.getState()).isEqualTo(GateSquare.State.PENDING_CLOSURE);
+            assertThat(gate.getOccupants()).contains(ghost);
+
+            level.move(ghost, Direction.EAST);
+            assertThat(ghost.getSquare()).isSameAs(board.squareAt(4, 1));
+            assertThat(gate.getState()).isEqualTo(GateSquare.State.CLOSED);
+            assertThat(gate.getOccupants()).doesNotContain(ghost);
+
+            level.move(ghost, Direction.WEST);
+            assertThat(ghost.getSquare()).isSameAs(board.squareAt(4, 1));
+            assertThat(gate.getOccupants()).doesNotContain(ghost);
+        } finally {
+            level.stop();
+        }
+    }
+
+    @Test
     void rejectsAnIncompleteCircuitWithAnActionableMessage() {
         MapParser parser = createParser(new PacManSprites());
 
