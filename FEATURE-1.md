@@ -12,8 +12,9 @@ O mapa original (`src/main/resources/board.txt`) foi mantido sem alterações. O
 os fantasmas e a posição inicial do jogador do mapa original; acrescenta dois portões no corredor
 superior e os interruptores perto do início.
 
-O mapa `board-circuit-test.txt` é menor (17 × 9) para facilitar testes manuais. Ele tem dois
-interruptores para cada circuito, dois portões para cada circuito e quatro fantasmas.
+O mapa `board-circuit-test.txt` é menor (19 × 11) para facilitar testes manuais. Ele tem dois
+interruptores para cada circuito, dois portões para cada circuito e quatro fantasmas. Uma divisória
+vertical separa o jogador dos fantasmas; os portões são as únicas passagens entre os lados.
 
 ## Legenda
 
@@ -26,9 +27,9 @@ interruptores para cada circuito, dois portões para cada circuito e quatro fant
 
 1. Execute `./gradlew run --args='/board-circuit-test.txt'`.
 2. Entre em um interruptor `1` ou `2` para abrir o circuito correspondente.
-3. Observe os fantasmas e espere um deles ocupar um portão `a` ou `b` daquele circuito.
+3. Observe a divisória central e espere um fantasma atravessar e ocupar um portão `a` ou `b` do circuito aberto.
 4. Entre em outro interruptor com o mesmo número para comandar o fechamento.
-5. Se ainda houver um ocupante no portão, ele deve mostrar `~`: não admite novas entradas,
+5. Se ainda houver um ocupante no portão no momento do fechamento, ele deve mostrar `~`: não admite novas entradas,
    mas permite que o ocupante saia. Quando o último ocupante sair, o portão fecha. Acionar de novo
    o interruptor para abrir cancela o fechamento pendente.
 
