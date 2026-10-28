@@ -88,6 +88,26 @@ class CircuitTest {
     }
 
     @Test
+    void pendingGateUsesFloorSpriteUntilItsLastOccupantLeaves() {
+        Circuit circuit = new Circuit(1);
+        GateSquare gate = new GateSquare(circuit, floor, wall);
+        TestUnit occupant = new TestUnit();
+        Square ground = new BasicSquare();
+
+        circuit.setOpen(true);
+        occupant.occupy(gate);
+        circuit.setOpen(false);
+
+        assertThat(gate.getState()).isEqualTo(GateSquare.State.PENDING_CLOSURE);
+        assertThat(gate.getSprite()).isSameAs(floor);
+
+        occupant.occupy(ground);
+
+        assertThat(gate.getState()).isEqualTo(GateSquare.State.CLOSED);
+        assertThat(gate.getSprite()).isSameAs(wall);
+    }
+
+    @Test
     void circuitRecordsItsSwitchesAndGates() {
         Circuit circuit = new Circuit(1);
         assertThat(circuit.hasGate()).isFalse();
