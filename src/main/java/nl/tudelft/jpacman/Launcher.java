@@ -203,11 +203,17 @@ public class Launcher {
      * Main execution method for the Launcher.
      *
      * @param args
-     *            The command line arguments - which are ignored.
+     *            An optional map resource to load, for example
+     *            /board-feature1.txt.
      * @throws IOException
      *             When a resource could not be read.
      */
     public static void main(String[] args) throws IOException {
-        new Launcher().launch();
+        Launcher launcher = new Launcher();
+        if (args.length > 0) {
+            String mapName = args[0];
+            launcher.withMapFile(mapName.startsWith("/") ? mapName : "/" + mapName);
+        }
+        launcher.launch();
     }
 }

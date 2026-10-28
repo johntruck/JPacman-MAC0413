@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.tudelft.jpacman.PacmanConfigurationException;
+import nl.tudelft.jpacman.board.Circuit;
 import nl.tudelft.jpacman.board.Board;
 import nl.tudelft.jpacman.board.BoardFactory;
 import nl.tudelft.jpacman.board.Square;
@@ -30,6 +33,11 @@ public class MapParser {
      * The factory that creates the squares and board.
      */
     private final BoardFactory boardCreator;
+
+    /**
+     * The circuits being assembled while parsing the current map.
+     */
+    private Map<Integer, Circuit> circuits;
 
     /**
      * Creates a new map parser.
@@ -62,8 +70,21 @@ public class MapParser {
      * @return The level as represented by this text.
      */
     public Level parseMap(char[][] map) {
+        if (map == null || map.length == 0 || map[0] == null || map[0].length == 0) {
+            throw new PacmanConfigurationException("Map must contain at least one tile.");
+        }
+
         int width = map.length;
         int height = map[0].length;
+        for (char[] column : map) {
+            if (column == null || column.length != height) {
+                throw new PacmanConfigurationException("Map columns must have equal height.");
+            }
+        }
+
+        circuits = new HashMap<>();
+        circuits.put(1, new Circuit(1));
+        circuits.put(2, new Circuit(2));
 
         Square[][] grid = new Square[width][height];
 
@@ -71,6 +92,7 @@ public class MapParser {
         List<Square> startPositions = new ArrayList<>();
 
         makeGrid(map, width, height, grid, ghosts, startPositions);
+        validateCircuits();
 
         Board board = boardCreator.createBoard(grid);
         return levelCreator.createLevel(board, ghosts, startPositions);
@@ -129,9 +151,38 @@ public class MapParser {
                 grid[x][y] = playerSquare;
                 startPositions.add(playerSquare);
                 break;
+            case '1':
+                grid[x][y] = boardCreator.createSwitch(circuits.get(1));
+                break;
+            case '2':
+                grid[x][y] = boardCreator.createSwitch(circuits.get(2));
+                break;
+            case 'a':
+                grid[x][y] = boardCreator.createGate(circuits.get(1));
+                break;
+            case 'b':
+                grid[x][y] = boardCreator.createGate(circuits.get(2));
+                break;
             default:
                 throw new PacmanConfigurationException("Invalid character at "
                     + x + "," + y + ": " + c);
+        }
+    }
+
+    /**
+     * Rejects maps that define only a gate or only a switch for a circuit.
+     */
+    private void validateCircuits() {
+        for (Circuit circuit : circuits.values()) {
+            if ((circuit.hasGate() || circuit.hasSwitch())
+                && (!circuit.hasGate() || !circuit.hasSwitch())) {
+                char gateSymbol = circuit.getId() == 1 ? 'a' : 'b';
+                throw new PacmanConfigurationException(
+                    "Circuit " + circuit.getId()
+                        + " is incomplete: it needs at least one switch ('"
+                        + circuit.getId() + "') and at least one gate ('"
+                        + gateSymbol + "').");
+            }
         }
     }
 

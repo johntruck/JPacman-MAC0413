@@ -127,6 +127,13 @@ public class PacManSprites extends SpriteStore {
     }
 
     /**
+     * @return The sprite used to draw a fixed circuit switch.
+     */
+    public Sprite getKeySprite() {
+        return loadSprite("/sprite/key.png");
+    }
+
+    /**
      * @return The sprite for the
      */
     public Sprite getPelletSprite() {

@@ -67,6 +67,26 @@ public class BoardFactory {
     }
 
     /**
+     * Creates a gate associated with the given circuit.
+     *
+     * @param circuit The circuit controlling this gate.
+     * @return A new gate square, initially closed.
+     */
+    public GateSquare createGate(Circuit circuit) {
+        return new GateSquare(circuit, sprites.getGroundSprite(), sprites.getWallSprite());
+    }
+
+    /**
+     * Creates a fixed switch associated with the given circuit.
+     *
+     * @param circuit The circuit controlled by this switch.
+     * @return A new switch square.
+     */
+    public SwitchSquare createSwitch(Circuit circuit) {
+        return new SwitchSquare(circuit, sprites.getGroundSprite(), sprites.getKeySprite());
+    }
+
+    /**
      * Creates a new square that cannot be occupied by any unit.
      *
      * @return A new square that cannot be occupied by any unit.
