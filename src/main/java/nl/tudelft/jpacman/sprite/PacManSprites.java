@@ -141,6 +141,13 @@ public class PacManSprites extends SpriteStore {
     }
 
     /**
+     * @return The sprite for the phase pulse.
+     */
+    public Sprite getBellSprite() {
+        return loadSprite("/sprite/bell.png");
+    }
+
+    /**
      * Overloads the default sprite loading, ignoring the exception. This class
      * assumes all sprites are provided, hence the exception will be thrown as a
      * {@link RuntimeException}.

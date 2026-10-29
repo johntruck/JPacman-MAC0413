@@ -1,8 +1,11 @@
 package nl.tudelft.jpacman.level;
 
+import java.util.List;
+
 import nl.tudelft.jpacman.board.Unit;
 import nl.tudelft.jpacman.npc.Ghost;
 import nl.tudelft.jpacman.points.PointCalculator;
+import nl.tudelft.jpacman.level.PhasePulse;
 
 /**
  * An extensible default interaction map for collisions caused by the player.
@@ -57,6 +60,20 @@ public class DefaultPlayerInteractionMap implements CollisionMap {
             (player, pellet) -> {
                 pointCalculator.consumedAPellet(player, pellet);
                 pellet.leaveSquare();
+            });
+
+        collisionMap.onCollision(Player.class, PhasePulse.class,
+            (player, phasePulse) -> {
+                boolean isPlayerAlive = true; // Using player.isAlive() doesn't work for some reason.
+                for (Unit occupant : phasePulse.getSquare().getOccupants()) {
+                    if (occupant instanceof Ghost) {
+                        isPlayerAlive = false;
+                    }
+                }
+                if (isPlayerAlive) {
+                    phasePulse.getCircuit().consumedAPhasePulse(phasePulse);
+                    phasePulse.leaveSquare();
+                }
             });
         return collisionMap;
     }

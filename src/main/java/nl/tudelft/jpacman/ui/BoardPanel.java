@@ -13,6 +13,7 @@ import nl.tudelft.jpacman.board.Square;
 import nl.tudelft.jpacman.board.SwitchSquare;
 import nl.tudelft.jpacman.board.Unit;
 import nl.tudelft.jpacman.game.Game;
+import nl.tudelft.jpacman.level.PhasePulse;
 
 /**
  * Panel displaying a game.
@@ -158,6 +159,10 @@ class BoardPanel extends JPanel {
         }
         for (Unit unit : square.getOccupants()) {
             unit.getSprite().draw(graphics, x, y, width, height);
+            if (unit instanceof PhasePulse) {
+                PhasePulse phasePulse = (PhasePulse) unit;
+                drawCircuitNumber(graphics, phasePulse.getCircuitId(), x, y, width, height);
+            }
         }
 
         if (square instanceof GateSquare) {

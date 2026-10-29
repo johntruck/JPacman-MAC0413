@@ -17,6 +17,7 @@ import nl.tudelft.jpacman.board.Square;
 import nl.tudelft.jpacman.board.SwitchSquare;
 import nl.tudelft.jpacman.board.Unit;
 import nl.tudelft.jpacman.npc.Ghost;
+import nl.tudelft.jpacman.board.Circuit;
 
 /**
  * A level of Pac-Man. A level consists of the board with the players and the
@@ -80,6 +81,11 @@ public class Level {
     private final Set<LevelObserver> observers;
 
     /**
+     * The circuits of this level.
+     */
+    private final Map<Integer, Circuit> circuits;
+
+    /**
      * Creates a new level for the board.
      *
      * @param board
@@ -92,7 +98,7 @@ public class Level {
      *            The collection of collisions that should be handled.
      */
     public Level(Board board, List<Ghost> ghosts, List<Square> startPositions,
-                 CollisionMap collisionMap) {
+                 CollisionMap collisionMap, Map<Integer, Circuit> circuits) {
         assert board != null;
         assert ghosts != null;
         assert startPositions != null;
@@ -108,6 +114,7 @@ public class Level {
         this.players = new ArrayList<>();
         this.collisions = collisionMap;
         this.observers = new HashSet<>();
+        this.circuits = circuits;
     }
 
     /**
@@ -209,6 +216,7 @@ public class Level {
                 return;
             }
             startNPCs();
+            resumeCircuits();
             inProgress = true;
             updateObservers();
         }
@@ -224,6 +232,7 @@ public class Level {
                 return;
             }
             stopNPCs();
+            stopCircuits();
             inProgress = false;
         }
     }
@@ -243,6 +252,15 @@ public class Level {
     }
 
     /**
+     * Resume the effects of phase pulse on all the affected circuits.
+     */
+    private void resumeCircuits() {
+        for (Circuit circuit : circuits.values()) {
+            circuit.resumePhasePulseTask();
+        }
+    }
+
+    /**
      * Stops all NPC movement scheduling and interrupts any movements being
      * executed.
      */
@@ -251,6 +269,15 @@ public class Level {
             ScheduledExecutorService schedule = entry.getValue();
             assert schedule != null;
             schedule.shutdownNow();
+        }
+    }
+
+    /**
+     * Stops all circuits phase pulse scheduling.
+     */
+    private void stopCircuits() {
+        for (Circuit circuit : circuits.values()) {
+            circuit.stopEndPhasePulseTask();
         }
     }
 

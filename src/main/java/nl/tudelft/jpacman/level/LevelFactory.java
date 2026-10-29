@@ -13,6 +13,7 @@ import nl.tudelft.jpacman.npc.ghost.GhostFactory;
 import nl.tudelft.jpacman.points.PointCalculator;
 import nl.tudelft.jpacman.sprite.PacManSprites;
 import nl.tudelft.jpacman.sprite.Sprite;
+import nl.tudelft.jpacman.board.Circuit;
 
 /**
  * Factory that creates levels and units.
@@ -82,12 +83,12 @@ public class LevelFactory {
      *            A list of squares from which players may start the game.
      * @return A new level for the board.
      */
-    public Level createLevel(Board board, List<Ghost> ghosts, List<Square> startPositions) {
+    public Level createLevel(Board board, List<Ghost> ghosts, List<Square> startPositions, Map<Integer, Circuit> circuits) {
 
         // We'll adopt the simple collision map for now.
         CollisionMap collisionMap = new PlayerCollisions(pointCalculator);
 
-        return new Level(board, ghosts, startPositions, collisionMap);
+        return new Level(board, ghosts, startPositions, collisionMap, circuits);
     }
 
     /**
@@ -111,6 +112,16 @@ public class LevelFactory {
                 return new RandomGhost(sprites.getGhostSprite(GhostColor.RED));
         }
     }
+
+    /**
+     * Creates a new phase pulse.
+     * @param circuit
+     *              The circuit that is affected by this phase pulse.
+     * @return The new phase pulse.
+     */
+    public PhasePulse createPhasePulse(Circuit circuit) {
+        return new PhasePulse(circuit, sprites.getBellSprite());
+    }  
 
     /**
      * Creates a new pellet.

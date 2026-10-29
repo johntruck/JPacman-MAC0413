@@ -2,6 +2,12 @@ package nl.tudelft.jpacman.board;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ScheduledFuture;
+
+import nl.tudelft.jpacman.level.PhasePulse;
 
 /**
  * A circuit shared by gates and fixed switches on a board.
@@ -13,8 +19,12 @@ public final class Circuit {
 
     private final int id;
     private final List<GateSquare> gates;
+    private final ScheduledExecutorService schedule; 
     private boolean open;
+    private boolean onPhasePulse;
     private int switchCount;
+    private long remainingPhasePulseTime;
+    private ScheduledFuture<?> endPhasePulseTask;
 
     /**
      * Creates a circuit, closed by default.
@@ -28,7 +38,9 @@ public final class Circuit {
         this.id = id;
         this.gates = new ArrayList<>();
         this.open = false;
+        this.onPhasePulse = false;
         this.switchCount = 0;
+        this.schedule = Executors.newSingleThreadScheduledExecutor();
     }
 
     /**
@@ -36,6 +48,25 @@ public final class Circuit {
      */
     public int getId() {
         return id;
+    }
+
+    /**
+     * Stops the current scheduled endPhasePulseTask.
+     */
+    public void stopEndPhasePulseTask() {
+        if (onPhasePulse) {
+            this.remainingPhasePulseTime = this.endPhasePulseTask.getDelay(TimeUnit.MILLISECONDS);
+            this.endPhasePulseTask.cancel(false);
+        }
+    }
+
+    /**
+     * Resume the effects of the PhasePulse.
+     */
+    public void resumePhasePulseTask() {
+        if (onPhasePulse) {
+            this.createEndPhasePulseTask(this.remainingPhasePulseTime);
+        }
     }
 
     /**
@@ -94,4 +125,38 @@ public final class Circuit {
     public boolean hasSwitch() {
         return switchCount > 0;
     }
+
+    /**
+     * Inverts the open/close command of all gates in this circuit.
+     */
+    public void consumedAPhasePulse(PhasePulse phasePulse) {
+        if (!this.onPhasePulse) {
+            this.onPhasePulse = true;
+            this.toggle();
+        
+            this.endPhasePulseTask = createEndPhasePulseTask(phasePulse.getDuration());
+        } else {
+            this.endPhasePulseTask.cancel(false);
+            this.endPhasePulseTask = createEndPhasePulseTask(phasePulse.getDuration());
+        }
+    }
+
+    /**
+     * Ends the effect of the phase pulse in this circuit.
+     */
+    public void endPhasePulse() {
+        this.toggle();
+        this.onPhasePulse = false;
+    }
+
+    /**
+     * Creates the task that ends the effect of the phase pulse in this circuit.
+     */
+    public ScheduledFuture<?> createEndPhasePulseTask(long time) {
+        return this.schedule.schedule(() -> {
+            this.endPhasePulse();
+        }, time, TimeUnit.MILLISECONDS);
+    }
+
+
 }

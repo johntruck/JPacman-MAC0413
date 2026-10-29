@@ -97,7 +97,7 @@ public class MapParser {
         validateCircuits();
 
         Board board = boardCreator.createBoard(grid);
-        return levelCreator.createLevel(board, ghosts, startPositions);
+        return levelCreator.createLevel(board, ghosts, startPositions, circuits);
     }
 
     private void makeGrid(char[][] map, int width, int height,
@@ -164,6 +164,16 @@ public class MapParser {
                 break;
             case 'b':
                 grid[x][y] = boardCreator.createGate(circuits.get(2));
+                break;
+            case '!':
+                Square phasePulseSquareCircuit1 = boardCreator.createGround();
+                grid[x][y] = phasePulseSquareCircuit1;
+                levelCreator.createPhasePulse(circuits.get(1)).occupy(phasePulseSquareCircuit1);
+                break;
+            case '?':
+                Square phasePulseSquareCircuit2 = boardCreator.createGround();
+                grid[x][y] = phasePulseSquareCircuit2;
+                levelCreator.createPhasePulse(circuits.get(2)).occupy(phasePulseSquareCircuit2);
                 break;
             default:
                 throw new PacmanConfigurationException("Invalid character at "

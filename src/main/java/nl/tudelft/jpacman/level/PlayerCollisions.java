@@ -1,5 +1,7 @@
 package nl.tudelft.jpacman.level;
 
+import java.util.List;
+
 import nl.tudelft.jpacman.board.Unit;
 import nl.tudelft.jpacman.npc.Ghost;
 import nl.tudelft.jpacman.points.PointCalculator;
@@ -41,6 +43,9 @@ public class PlayerCollisions implements CollisionMap {
         else if (mover instanceof Pellet) {
             pelletColliding((Pellet) mover, collidedOn);
         }
+        else if (mover instanceof PhasePulse) {
+            phasePulseColliding((PhasePulse) mover, collidedOn);
+        }
     }
 
     private void playerColliding(Player player, Unit collidedOn) {
@@ -49,6 +54,9 @@ public class PlayerCollisions implements CollisionMap {
         }
         if (collidedOn instanceof Pellet) {
             playerVersusPellet(player, (Pellet) collidedOn);
+        }
+        if (collidedOn instanceof PhasePulse) {
+            playerVersusPhasePulse(player, (PhasePulse) collidedOn);
         }
     }
 
@@ -64,6 +72,11 @@ public class PlayerCollisions implements CollisionMap {
         }
     }
 
+    private void phasePulseColliding(PhasePulse phasePulse, Unit collidedOn) {
+        if (collidedOn instanceof Player) {
+            playerVersusPhasePulse((Player) collidedOn, phasePulse);
+        }
+    }
 
     /**
      * Actual case of player bumping into ghost or vice versa.
@@ -92,4 +105,24 @@ public class PlayerCollisions implements CollisionMap {
         pellet.leaveSquare();
     }
 
+    /**
+     * Actual case of player consuming a phase pulse.
+     *
+     * @param player
+     *           The player involved in the collision.
+     * @param phasePulse
+     *           The phase pulse involved in the collision.
+     */
+    public void playerVersusPhasePulse(Player player, PhasePulse phasePulse) {
+        boolean isPlayerAlive = true; // Using player.isAlive() doesn't work for some reason.
+        for (Unit occupant : phasePulse.getSquare().getOccupants()) {
+            if (occupant instanceof Ghost) {
+                isPlayerAlive = false;
+            }
+        }
+        if (isPlayerAlive) {
+            phasePulse.getCircuit().consumedAPhasePulse(phasePulse);
+            phasePulse.leaveSquare();
+        }
+    }
 }
