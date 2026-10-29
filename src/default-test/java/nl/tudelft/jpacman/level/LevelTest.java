@@ -8,8 +8,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import nl.tudelft.jpacman.board.Board;
 import nl.tudelft.jpacman.board.Square;
+import nl.tudelft.jpacman.board.Circuit;
 import nl.tudelft.jpacman.npc.Ghost;
 
+import java.util.Map;
+import java.util.HashMap;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,9 +62,12 @@ class LevelTest {
      */
     @BeforeEach
     void setUp() {
+        Map<Integer, Circuit>  circuits = new HashMap<>();
+        circuits.put(1, new Circuit(1));
+        circuits.put(2, new Circuit(2));
         final long defaultInterval = 100L;
         level = new Level(board, Lists.newArrayList(ghost), Lists.newArrayList(
-            square1, square2), collisions);
+            square1, square2), collisions, circuits);
         when(ghost.getInterval()).thenReturn(defaultInterval);
     }
 

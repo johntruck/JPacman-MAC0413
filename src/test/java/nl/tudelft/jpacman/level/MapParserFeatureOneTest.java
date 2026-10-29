@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +21,7 @@ import nl.tudelft.jpacman.npc.ghost.GhostFactory;
 import nl.tudelft.jpacman.npc.ghost.Navigation;
 import nl.tudelft.jpacman.points.DefaultPointCalculator;
 import nl.tudelft.jpacman.sprite.PacManSprites;
+import nl.tudelft.jpacman.board.Circuit;
 
 /**
  * Integration tests for maps, player switch activation, and collision behavior.
@@ -94,9 +97,13 @@ class MapParserFeatureOneTest {
         GateSquare gate = (GateSquare) board.squareAt(5, 1);
         SwitchSquare circuitSwitch = (SwitchSquare) board.squareAt(2, 1);
 
+        Map<Integer, Circuit>  circuits = new HashMap<>();
+        circuits.put(1, new Circuit(1));
+        circuits.put(2, new Circuit(2));
+
         Level level = new Level(board, Collections.<Ghost>emptyList(),
             Collections.singletonList(board.squareAt(1, 1)),
-            new PlayerCollisions(new DefaultPointCalculator()));
+            new PlayerCollisions(new DefaultPointCalculator()), circuits);
         level.registerPlayer(player);
         level.start();
         try {
@@ -126,9 +133,13 @@ class MapParserFeatureOneTest {
         Player player = new PlayerFactory(sprites).createPacMan();
         GateSquare gate = (GateSquare) board.squareAt(3, 1);
 
+        Map<Integer, Circuit>  circuits = new HashMap<>();
+        circuits.put(1, new Circuit(1));
+        circuits.put(2, new Circuit(2));
+
         Level level = new Level(board, Collections.<Ghost>emptyList(),
             Collections.singletonList(board.squareAt(1, 1)),
-            new PlayerCollisions(new DefaultPointCalculator()));
+            new PlayerCollisions(new DefaultPointCalculator()), circuits);
         level.registerPlayer(player);
         level.start();
         try {
