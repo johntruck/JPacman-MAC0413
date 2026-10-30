@@ -14,6 +14,7 @@ import nl.tudelft.jpacman.board.SwitchSquare;
 import nl.tudelft.jpacman.board.Unit;
 import nl.tudelft.jpacman.game.Game;
 import nl.tudelft.jpacman.level.PhasePulse;
+import nl.tudelft.jpacman.board.Circuit;
 
 /**
  * Panel displaying a game.
@@ -161,21 +162,47 @@ class BoardPanel extends JPanel {
             unit.getSprite().draw(graphics, x, y, width, height);
             if (unit instanceof PhasePulse) {
                 PhasePulse phasePulse = (PhasePulse) unit;
-                drawCircuitNumber(graphics, phasePulse.getCircuitId(), x, y, width, height);
+                Color color = Color.WHITE;
+                if (phasePulse.getCircuitId() == 1) {
+                    color = Color.GREEN;
+                } else {
+                    color = Color.RED;
+                }
+                drawCircuitNumber(graphics, phasePulse.getCircuitId(), x, y, width, height, color);
             }
         }
 
         if (square instanceof GateSquare) {
             GateSquare gate = (GateSquare) square;
-            drawCircuitNumber(graphics, gate.getCircuitId(), x, y, width, height);
+            Color color = Color.WHITE;
+
+            if (gate.getCircuit().isOnPhasePulse()) {
+                if (gate.getCircuitId() == 1) {
+                    color = Color.GREEN;
+                } else {
+                    color = Color.RED;
+                }
+            }
+
+            drawCircuitNumber(graphics, gate.getCircuitId(), x, y, width, height, color);
             if (gate.isPendingClosure()) {
-                graphics.setColor(Color.WHITE);
+                graphics.setColor(color);
                 graphics.drawString("~", x + PENDING_MARK_X_OFFSET,
                     y + Math.min(height - 2, PENDING_MARK_BASELINE));
             }
         } else if (square instanceof SwitchSquare) {
             SwitchSquare switchSquare = (SwitchSquare) square;
-            drawCircuitNumber(graphics, switchSquare.getCircuitId(), x, y, width, height);
+            Color color = Color.WHITE;
+
+            if (switchSquare.getCircuit().isOnPhasePulse()) {
+                if (switchSquare.getCircuitId() == 1) {
+                    color = Color.GREEN;
+                } else {
+                    color = Color.RED;
+                }
+            }
+
+            drawCircuitNumber(graphics, switchSquare.getCircuitId(), x, y, width, height, color);
         }
     }
 
@@ -194,6 +221,27 @@ class BoardPanel extends JPanel {
         Font original = graphics.getFont();
         graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, GATE_LABEL_FONT_SIZE));
         graphics.setColor(Color.WHITE);
+        graphics.drawString(Integer.toString(circuitId), x + width - LABEL_RIGHT_OFFSET,
+            y + height - LABEL_BOTTOM_OFFSET);
+        graphics.setFont(original);
+    }
+
+    /**
+     * Draws the circuit number over a gate or switch.
+     *
+     * @param graphics The graphics context.
+     * @param circuitId The circuit number.
+     * @param x The horizontal position.
+     * @param y The vertical position.
+     * @param width The square width.
+     * @param height The square height.
+     * @param color The symbol color.
+     */
+    private void drawCircuitNumber(Graphics graphics, int circuitId, int x, int y,
+                                   int width, int height, Color color) {
+        Font original = graphics.getFont();
+        graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, GATE_LABEL_FONT_SIZE));
+        graphics.setColor(color);
         graphics.drawString(Integer.toString(circuitId), x + width - LABEL_RIGHT_OFFSET,
             y + height - LABEL_BOTTOM_OFFSET);
         graphics.setFont(original);

@@ -50,6 +50,13 @@ public final class GateSquare extends Square {
     }
 
     /**
+     * @return The circuit for this gate.
+     */
+    public Circuit getCircuit() {
+        return circuit;
+    }
+
+    /**
      * @return The current visible and physical gate state.
      */
     public State getState() {

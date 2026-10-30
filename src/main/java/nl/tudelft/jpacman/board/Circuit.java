@@ -44,6 +44,13 @@ public final class Circuit {
     }
 
     /**
+     * @return If the circuit for this gate is on phase pulse.
+     */
+    public boolean isOnPhasePulse() {
+        return this.onPhasePulse;
+    }
+
+    /**
      * @return The identifier of this circuit.
      */
     public int getId() {

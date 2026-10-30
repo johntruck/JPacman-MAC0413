@@ -45,6 +45,13 @@ public final class SwitchSquare extends Square {
     }
 
     /**
+     * @return The circuit for this switch.
+     */
+    public Circuit getCircuit() {
+        return circuit;
+    }
+
+    /**
      * @return The ground sprite beneath the key icon.
      */
     public Sprite getBackgroundSprite() {
